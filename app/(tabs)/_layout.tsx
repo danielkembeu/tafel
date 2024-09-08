@@ -1,10 +1,22 @@
+import { Colors } from "@/constants/Colors";
 import { Ionicons } from "@expo/vector-icons";
 import { Tabs } from "expo-router";
 
 
 export default function TabsLayout() {
     return (
-        <Tabs>
+        <Tabs screenOptions={{
+            tabBarActiveTintColor: Colors.primary,
+            headerTransparent: true,
+            headerTitleStyle: {
+                fontSize: 24,
+                fontWeight: 'bold',
+                color: 'white'
+            },
+            headerBackgroundContainerStyle: {
+                backgroundColor: Colors.primary
+            }
+        }}>
             <Tabs.Screen name="index"
                 options={{
                     title: 'Home',
@@ -17,15 +29,15 @@ export default function TabsLayout() {
                 options={{
                     title: 'Resources',
                     tabBarIcon: ({ color }) =>
-                        <Ionicons name="home" size={24} color={color} />
+                        <Ionicons name="file-tray-full" size={24} color={color} />
                 }}
             />
 
-            <Tabs.Screen name="inbox"
+            <Tabs.Screen name="community"
                 options={{
-                    title: 'Inbox',
+                    title: 'Community',
                     tabBarIcon: ({ color }) =>
-                        <Ionicons name="chatbubble" size={24} color={color} />
+                        <Ionicons name="earth" size={24} color={color} />
                 }}
             />
 

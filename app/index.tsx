@@ -1,8 +1,8 @@
 import { Link } from "expo-router";
 import { Text, View, StyleSheet } from "react-native";
-import { LogBox } from "react-native";
+// import { LogBox } from "react-native";
 
-LogBox.ignoreAllLogs();
+// LogBox.ignoreAllLogs();
 
 export default function Index() {
   return (
@@ -10,7 +10,7 @@ export default function Index() {
       style={styles.container}
     >
       <Text>Bienvenue dans Tafel</Text>
-      <Link href="/(tabs)/">Vers l'application</Link>
+      <Link href="/(auth)/register">Vers l'application</Link>
     </View>
   );
 }
