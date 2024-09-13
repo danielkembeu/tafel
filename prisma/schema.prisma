@@ -1,0 +1,76 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+// Looking for ways to speed up your queries, or scale easily with your serverless or edge functions?
+// Try Prisma Accelerate: https://pris.ly/cli/accelerate-init
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "mysql"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  id        String     @id @default(cuid())
+  email     String     @unique
+  name      String?
+  role      Role
+  createdAt DateTime   @default(now())
+  updatedAt DateTime   @updatedAt
+  resources Resource[] // Un utilisateur peut publier plusieurs ressources
+  comments  Comment[] // Un utilisateur peut poster plusieurs commentaires
+}
+
+model Course {
+  id          String     @id @default(cuid())
+  title       String
+  description String
+  resources   Resource[] // Un cours peut avoir plusieurs ressources
+  createdAt   DateTime   @default(now())
+}
+
+model Resource {
+  id          String       @id @default(cuid())
+  title       String
+  description String
+  type        ResourceType // Type de ressource (PDF, Vidéo, Image, etc.)
+  fileUrl     String // Lien vers la ressource
+  userId      String
+  courseId    String
+  course      Course       @relation(fields: [courseId], references: [id])
+  user        User         @relation(fields: [userId], references: [id])
+  comments    Comment[] // Les commentaires sur la ressource
+  createdAt   DateTime     @default(now())
+}
+
+model Comment {
+  id         String   @id @default(cuid())
+  content    String
+  resourceId String
+  userId     String
+  resource   Resource @relation(fields: [resourceId], references: [id])
+  user       User     @relation(fields: [userId], references: [id])
+  createdAt  DateTime @default(now())
+}
+
+enum Role {
+  TEACHER
+  STUDENT
+}
+
+// Community
+//  - filiere
+//  - UE
+
+// School
+// - Datas of the school
+
+enum ResourceType {
+  PDF
+  VIDEO
+  IMAGE
+  DOCUMENT
+}
