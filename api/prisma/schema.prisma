@@ -61,6 +61,13 @@ enum Role {
   STUDENT
 }
 
+// Community
+//  - filiere
+//  - UE
+
+// School
+// - Datas of the school
+
 enum ResourceType {
   PDF
   VIDEO

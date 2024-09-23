@@ -41,6 +41,7 @@ export default function RegisterScreen() {
             const userData = {
                 email
             }
+            
             console.log(userData);
         }
     }

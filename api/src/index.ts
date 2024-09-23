@@ -10,7 +10,7 @@ const app = express();
 const port = 4100;
 
 app.use(express.json());
-app.use(cors())
+app.use(cors());
 
 // Register routes
 app.use('/api/users', userRoutes);
@@ -19,5 +19,5 @@ app.use('/api/resources', resourceRoutes);
 app.use('/api/comments', commentRoutes);
 
 app.listen(port, () => {
-    console.log(`Server is running at http://localhost:${port}`);
+    console.log(`Server is running at port ${port}`);
 });

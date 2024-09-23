@@ -11,5 +11,5 @@ export const unites: any[] = [
     { key: 'ue10', value: 'developpement_web', text: 'Développement Web' },
     { key: 'ue11', value: 'intelligence_artificielle', text: 'Intelligence Artificielle' },
     { key: 'ue12', value: 'anglais', text: 'Anglais Technique' },
-    { key: 'ue13', value: 'entrepreneuriat', text: 'Entrepreneuriat' },
+    { key: 'ue13', value: 'entrepreneuriat', text: 'Entrepreneuriat' }
 ];

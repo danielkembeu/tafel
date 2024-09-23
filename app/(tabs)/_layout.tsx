@@ -1,6 +1,7 @@
 import { Colors } from "@/constants/Colors";
 import { Ionicons } from "@expo/vector-icons";
 import { Tabs } from "expo-router";
+import { Text, TouchableOpacity, View } from "react-native";
 
 
 export default function TabsLayout() {
@@ -8,14 +9,45 @@ export default function TabsLayout() {
         <Tabs screenOptions={{
             tabBarActiveTintColor: Colors.primary,
             headerTransparent: true,
+            headerTitle: "",
             headerTitleStyle: {
                 fontSize: 24,
                 fontWeight: 'bold',
-                color: 'white'
+                color: Colors.primary
             },
-            headerBackgroundContainerStyle: {
-                backgroundColor: Colors.primary
-            }
+            headerLeft: () => {
+                return (
+                    <View style={{
+                        paddingRight: 10,
+                        paddingTop: 20,
+                        justifyContent: 'center',
+                        marginLeft: 20
+                    }}>
+                        <Text style={{
+                            fontSize: 26,
+                            fontWeight: 'bold',
+                            color: Colors.primary
+                        }}>
+                            Hi, Princesse !
+                        </Text>
+                        <Text style={{
+                            fontSize: 16,
+                            fontWeight: 'bold',
+                        }}>
+                            Let's start learning !
+                        </Text>
+                    </View>
+                )
+            },
+            headerRight: () => <View style={{ marginRight: 20, flexDirection: 'row', gap: 20, alignItems: 'center' }}>
+                <TouchableOpacity activeOpacity={.6}>
+                    <Ionicons name="cart-outline" size={28} color={Colors.primary} />
+                </TouchableOpacity>
+                <TouchableOpacity activeOpacity={.6}>
+                    <Ionicons name="notifications-outline" size={28} color={Colors.primary} />
+                </TouchableOpacity>
+            </View>,
+            // tab
         }}>
             <Tabs.Screen name="index"
                 options={{

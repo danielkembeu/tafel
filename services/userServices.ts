@@ -1,49 +1,55 @@
 import { User } from "@/utils/interface/user";
 import axios from "axios";
+import { Alert, ToastAndroid } from "react-native";
 
 
-const BASE_USER_ENDPOINT = 'http://localhost:4100/users';
+const BASE_USER_ENDPOINT = 'http://10.0.2.2:4100/users';
 const ERROR_MESSAGE = {
     message: "Something went wrong ! Please try again later..."
 };
 
-export async function getAllUsers(): Promise<User[]> {
-    const response = await axios.get(BASE_USER_ENDPOINT);
-    const data = await response.data;
+export async function getAllUsers() {
 
-    if (data) {
-        return Promise.resolve(data);
-    } else {
-        return Promise.reject(ERROR_MESSAGE);
-    }
+    await axios.get(BASE_USER_ENDPOINT)
+        .then((response) => {
+            if (response.data) {
+                return response.data;
+            }
+        })
+        .catch((error) => {
+            if (error) {
+                Alert.alert(`${JSON.stringify(ERROR_MESSAGE)}`)
+            }
+        });
+
 }
 
-export async function getOneUser(userId: string): Promise<User> {
+export async function getOneUser(userId: string) {
 
     const URL = `${BASE_USER_ENDPOINT}/${userId}`;
 
-    const response = await axios.get(URL);
-    const data = await response.data;
-
-    if (data) {
-        return Promise.resolve(data);
-    } else {
-        return Promise.reject(ERROR_MESSAGE);
-    }
+    await axios.get(URL)
+        .then((response) => {
+            if (response.data) {
+                return response.data;
+            }
+        })
+        .catch((error) => {
+            if (error) {
+                Alert.alert(`${JSON.stringify(ERROR_MESSAGE)}`)
+            }
+        });
 }
 
 
 export async function createNewUser(userData: User): Promise<User> {
-
+    console.log({ userData });
     const URL = `${BASE_USER_ENDPOINT}/create`;
 
-    const response = await axios.post(URL, userData);
-    const data = await response.data;
-
-    if (data) {
-        console.log(data);
-        return Promise.resolve(data);
-    } else {
-        return Promise.reject(ERROR_MESSAGE);
-    }
+    return await axios.post(URL, userData)
+        .then(response => response.data)
+        .catch(error => {
+            ToastAndroid.show(error.message, ToastAndroid.LONG);
+            console.log(error);
+        });
 }

@@ -27,10 +27,12 @@ export const getUserById = async (req: Request, res: Response) => {
 
 export const createUser = async (req: Request, res: Response) => {
     const { email, name, role } = req.body;
+
     try {
         const user = await prisma.user.create({
             data: { email, name, role },
         });
+        console.log(user);
         res.status(201).json(user);
     } catch (error) {
         res.status(500).json({ error: 'Failed to create user' });
