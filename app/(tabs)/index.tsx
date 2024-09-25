@@ -1,38 +1,52 @@
 import { FlatList, Image, ScrollView, StyleSheet, Text, View } from 'react-native'
 import React from 'react'
 import { SafeAreaView } from 'react-native-safe-area-context'
-import { globalStyles } from '@/constants/global_styles'
 import CourseCard from '@/components/cards/course_card'
 import AppSearchBar from '@/components/search_bar'
 import CategoryTile from '@/components/category_tile'
 import { Ionicons } from '@expo/vector-icons'
 import { Colors } from '@/constants/Colors'
+import SectionHeader from '@/components/section_header'
+import { courses } from '@/utils/data/courses'
 
 export default function HomeScreen() {
   return (
-    <SafeAreaView style={[globalStyles.defaultContainer, styles.container]}>
-
-      <AppSearchBar />
-
+    <SafeAreaView style={styles.container}>
       <ScrollView showsVerticalScrollIndicator={false}>
-        <Text style={{
-          fontSize: 22,
-          fontWeight: 'bold',
-        }}>
-          Tous les cours
-        </Text>
+
+        <View style={{ marginHorizontal: 20 }}>
+          <AppSearchBar />
+        </View>
+
+        <SectionHeader
+          sectionTitle='Tous les cours'
+          sectionHeaderRight={<></>}
+        />
 
         <View style={styles.listWrapper}>
           <FlatList
             decelerationRate={.8}
             horizontal
             showsHorizontalScrollIndicator={false}
-            data={Array.from({ length: 5 })}
-            renderItem={({ index }) => <CourseCard />}
+            contentContainerStyle={{ paddingBottom: 10 }}
+            data={courses}
+            renderItem={({ item, index }) =>
+              <CourseCard
+                key={index}
+                title={item.title}
+                description={item.description}
+                author={item.author}
+                communityMemberCount={item.communityMemberCount}
+                resourcesCount={item.resourcesCount}
+              />
+            }
           />
         </View>
 
-        <Text style={{ marginBottom: 20, fontWeight: 'bold', fontSize: 22 }}>Your categories</Text>
+        <SectionHeader
+          sectionTitle='Mes categories'
+          sectionHeaderRight={<></>}
+        />
 
         <View style={styles.listWrapper}>
           <FlatList
@@ -57,54 +71,58 @@ export default function HomeScreen() {
           />
         </View>
 
-        {
-          Array.from({ length: 6 }).map((_, index) => (
-            <View key={index} style={{
-              flexDirection: 'row',
-              justifyContent: 'space-around',
-              marginBottom: 10,
-              width: '100%',
-              height: 120,
-              backgroundColor: 'white',
-              borderRadius: 10,
-              shadowColor: '#000',
-              shadowOffset: { width: 0, height: 2 },
-              // elevation: 2
-            }}>
-              <View style={{
-                width: '60%',
-                padding: 10,
+        <View style={{ paddingHorizontal: 20, gap: 10 }}>
+          {
+            Array.from({ length: 6 }).map((_, index) => (
+              <View key={index} style={{
+                flexDirection: 'row',
+                justifyContent: 'space-around',
+                marginBottom: 10,
+                width: '100%',
+                height: 120,
                 backgroundColor: 'white',
                 borderRadius: 10,
-                justifyContent: 'center',
                 shadowColor: '#000',
                 shadowOffset: { width: 0, height: 2 },
+                elevation: 6
               }}>
-                <Text style={{
-                  fontWeight: 'bold',
-                  fontSize: 18,
-                  marginBottom: 10,
+                <View style={{
+                  width: '60%',
+                  padding: 10,
+                  backgroundColor: 'white',
+                  borderRadius: 10,
+                  justifyContent: 'center',
+                  shadowColor: '#000',
+                  shadowOffset: { width: 0, height: 2 },
                 }}>
-                  UI/UX Design for beginners. Typographic rules 4 hours.
-                </Text>
+                  <Text style={{
+                    fontWeight: 'bold',
+                    fontSize: 18,
+                    marginBottom: 10,
+                  }}>
+                    UI/UX Design for beginners. Typographic rules 4 hours.
+                  </Text>
 
-                <View style={{ flexDirection: 'row', alignItems: 'center', gap: 6 }}>
-                  {Array.from({ length: 5 }).map((_, i) => <Ionicons key={i} name='star' size={16} color={Colors.primary} />)}
+                  <View style={{ flexDirection: 'row', alignItems: 'center', gap: 6 }}>
+                    {Array.from({ length: 5 }).map((_, i) => <Ionicons key={i} name='star' size={16} color={Colors.primary} />)}
+                  </View>
+
                 </View>
-
-              </View>
-              <View style={{
-                height: '100%',
-                width: '30%',
-              }}>
-                <Image style={{
-                  width: '100%',
+                <View style={{
                   height: '100%',
-                }} source={require('@/assets/images/app/cb1.png')} resizeMode="contain" />
+                  width: '30%',
+                }}>
+                  <Image style={{
+                    width: '100%',
+                    height: '100%',
+                  }} source={require('@/assets/images/app/cb1.png')} resizeMode="contain" />
+                </View>
               </View>
-            </View>
-          ))
-        }
+            ))
+          }
+        </View>
+
+
       </ScrollView>
     </SafeAreaView>
   )
@@ -112,7 +130,9 @@ export default function HomeScreen() {
 
 const styles = StyleSheet.create({
   container: {
-    padding: 20
+    // paddingHorizontal: 20,
+    backgroundColor: 'white',
+    flex: 1,
   },
   listWrapper: {
     marginBottom: 20

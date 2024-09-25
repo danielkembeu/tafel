@@ -71,13 +71,13 @@ export default function InboxScreen() {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    // backgroundColor: 'white',
+    backgroundColor: 'white',
   },
   rightButton: {
     flexDirection: 'row',
     alignItems: 'center',
     gap: 10,
-    backgroundColor: Colors.primaryBg,
+    backgroundColor: '#eee',
     paddingHorizontal: 14,
     borderRadius: 20,
     paddingVertical: 4,
@@ -85,6 +85,6 @@ const styles = StyleSheet.create({
   rightButtonText: {
     fontSize: 16,
     fontWeight: '600',
-    color: Colors.primary
+    color: '#777'
   }
 })

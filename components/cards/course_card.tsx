@@ -1,28 +1,56 @@
-import { Dimensions, Image, StyleSheet, Text, TouchableOpacity, View } from 'react-native'
-import React from 'react'
+import { Dimensions, Image, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
+import React from 'react';
 import Tag from '../tag';
-import { Link, router } from 'expo-router';
-
+import { router } from 'expo-router';
+import Animated, { FadeIn, FadeOut } from 'react-native-reanimated';  // Import animations
 
 const width = Dimensions.get('window').width;
 
-export default function CourseCard() {
+type CourseCardProps = {
+    title: string;
+    communityMemberCount: number;
+    description: string;
+    author: string;
+    resourcesCount: number;
+};
+
+export default function CourseCard({
+    title,
+    communityMemberCount,
+    description,
+    author,
+    resourcesCount,
+}: CourseCardProps) {
     return (
-        <View style={styles.container}>
+        <Animated.View
+            sharedTransitionTag='courseImage'
+            style={styles.container}
+            entering={FadeIn.duration(500)}  // Fade-in animation when card appears
+            exiting={FadeOut.duration(300)}  // Optional fade-out animation when card disappears
+        >
             <View style={styles.tag}>
                 <Tag />
             </View>
-            {/* @ts-ignore */}
-            <TouchableOpacity onPress={() => router.push('/(details)/course_detail')} activeOpacity={.6} style={{ height: '60%' }}>
+
+            <TouchableOpacity onPress={() => router.push('/(details)/course_detail')} activeOpacity={.6} style={{ height: '50%' }}>
                 <Image style={styles.image} source={require('@/assets/images/app/cb1.png')} />
             </TouchableOpacity>
+
             <View style={styles.infoContainer}>
-                <Text style={styles.title}>
-                    Maintenance des Systemes d'informations
-                </Text>
+                <Text style={styles.title}>{title}</Text>
+                <Text>Description: {description.slice(0, 40)}</Text>
+                {/* <Text>Community members: {communityMemberCount}</Text> */}
+                <View style={{
+                    flexDirection: 'row',
+                    justifyContent: 'space-between',
+                    alignItems: 'center'
+                }}>
+                    <Text>Author: {author}</Text>
+                    <Text>Resources: {resourcesCount}</Text>
+                </View>
             </View>
-        </View>
-    )
+        </Animated.View>
+    );
 }
 
 const styles = StyleSheet.create({
@@ -31,7 +59,7 @@ const styles = StyleSheet.create({
         maxHeight: 400,
         maxWidth: 420,
         width: width - 140,
-        margin: 10,
+        marginHorizontal: 10,
         backgroundColor: '#F5F5F5',
         borderRadius: 16,
         overflow: 'hidden',
@@ -47,17 +75,18 @@ const styles = StyleSheet.create({
         resizeMode: 'cover',
     },
     infoContainer: {
-        padding: 10,
-
+        padding: 20,
+        gap: 6
     },
     title: {
         fontWeight: 'bold',
         fontSize: 22,
+        marginBottom: 5,
     },
     tag: {
         position: 'absolute',
         top: 16,
         left: 14,
-        zIndex: 100
-    }
+        zIndex: 100,
+    },
 });

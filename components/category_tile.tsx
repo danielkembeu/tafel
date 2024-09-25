@@ -44,7 +44,7 @@ const styles = StyleSheet.create({
         marginBottom: 8,
         marginHorizontal: 8,
         backgroundColor: 'white',
-        borderRadius: 18,
+        borderRadius: 30,
     },
     text: {
         color: DEFAULT_COLOR,

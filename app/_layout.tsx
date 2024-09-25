@@ -13,6 +13,11 @@ export default function RootLayout() {
           headerStyle: { backgroundColor: "#f4f4f4" },
           headerTitleStyle: { color: "#333" }
         }} />
+        <Stack.Screen name="(room)/[roomId]" options={{
+          headerTitle: "Discussions",
+          headerStyle: { backgroundColor: "#f4f4f4" },
+          headerTitleStyle: { color: "#333" }
+        }} />
         <Stack.Screen name="(auth)" options={{ headerShown: false }} />
       </Stack>
     </>
