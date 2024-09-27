@@ -12,12 +12,12 @@ export const getAllComments = async (req: Request, res: Response) => {
 };
 
 export const createComment = async (req: Request, res: Response) => {
-    const { content, resourceId, userId } = req.body;
+    const { content, courseId, userId } = req.body;
     try {
         const comment = await prisma.comment.create({
             data: {
                 content,
-                resource: { connect: { id: resourceId } },
+                course: { connect: { id: courseId } },
                 user: { connect: { id: userId } },
             },
         });

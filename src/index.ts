@@ -10,14 +10,16 @@ const app = express();
 const port = 4100;
 
 app.use(express.json());
-app.use(cors())
+app.use(cors());
 
 // Register routes
 app.use('/api/users', userRoutes);
 app.use('/api/courses', courseRoutes);
 app.use('/api/resources', resourceRoutes);
 app.use('/api/comments', commentRoutes);
+app.use('/api/rooms', commentRoutes);
+app.use('/api/messages', commentRoutes);
 
 app.listen(port, () => {
-    console.log(`Server is running at http://10.0.2.2:${port}`);
+    console.log(`Server is running at port ${port}`);
 });
