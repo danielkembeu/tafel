@@ -3,7 +3,6 @@ import React from 'react'
 import { Stack } from 'expo-router'
 import { Ionicons } from '@expo/vector-icons'
 import { Colors } from '@/constants/Colors'
-import { globalStyles } from '@/constants/global_styles'
 import ResourceCard from '@/components/resource_card'
 
 export default function course_detail() {
@@ -86,8 +85,7 @@ const styles = StyleSheet.create({
     },
     imageSection: {
         height: 380,
-        width: '100%',
-        padding: 20,
+        width: '100%'
     },
     topImage: {
         width: '100%',

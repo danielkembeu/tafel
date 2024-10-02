@@ -2,6 +2,7 @@
 import { Request, Response } from 'express';
 import prisma from '../src/db';
 
+
 export const getAllResources = async (req: Request, res: Response) => {
     try {
         const resources = await prisma.resource.findMany();
@@ -11,8 +12,9 @@ export const getAllResources = async (req: Request, res: Response) => {
     }
 };
 
+
 export const createResource = async (req: Request, res: Response) => {
-    const { title, description, type, fileUrl, userId, courseId } = req.body;
+    const { title, description, type, fileUrl, teacherId, courseId } = req.body;
     try {
         const resource = await prisma.resource.create({
             data: {
@@ -20,7 +22,7 @@ export const createResource = async (req: Request, res: Response) => {
                 description,
                 type,
                 fileUrl,
-                user: { connect: { id: userId } },
+                teacher: { connect: { id: teacherId } },
                 course: { connect: { id: courseId } },
             },
         });

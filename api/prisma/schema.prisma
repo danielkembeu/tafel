@@ -14,14 +14,46 @@ datasource db {
 }
 
 model User {
+  id        String    @id @default(cuid())
+  role      Role
+  createdAt DateTime  @default(now())
+  updatedAt DateTime  @updatedAt
+  student   Student[]
+  teacher   Teacher[]
+  comments  Comment[]
+  room      Room?     @relation(fields: [roomId], references: [id])
+  roomId    String?
+  messages  Message[]
+  admin     Admin[]
+}
+
+model Student {
+  id      String  @id @default(cuid())
+  email   String  @unique
+  name    String
+  age     Int
+  subject Subject
+  user    User?   @relation(fields: [userId], references: [id])
+  userId  String?
+}
+
+model Teacher {
   id        String     @id @default(cuid())
   email     String     @unique
-  name      String?
-  role      Role
-  createdAt DateTime   @default(now())
-  updatedAt DateTime   @updatedAt
-  resources Resource[] // Un utilisateur peut publier plusieurs ressources
-  comments  Comment[] // Un utilisateur peut poster plusieurs commentaires
+  name      String
+  subject   Subject
+  courses   Course[]
+  resources Resource[]
+  user      User?      @relation(fields: [userId], references: [id])
+  userId    String?
+}
+
+model Admin {
+  id     String @id @default(cuid())
+  email  String @unique
+  name   String
+  user   User?  @relation(fields: [userId], references: [id])
+  userId String
 }
 
 model Course {
@@ -30,6 +62,10 @@ model Course {
   description String
   resources   Resource[] // Un cours peut avoir plusieurs ressources
   createdAt   DateTime   @default(now())
+  updatedAt   DateTime   @updatedAt
+  teacher     Teacher    @relation(fields: [teacherId], references: [id])
+  teacherId   String
+  comments    Comment[] // Les commentaires sur le cours
 }
 
 model Resource {
@@ -38,27 +74,46 @@ model Resource {
   description String
   type        ResourceType // Type de ressource (PDF, Vidéo, Image, etc.)
   fileUrl     String // Lien vers la ressource
-  userId      String
   courseId    String
   course      Course       @relation(fields: [courseId], references: [id])
-  user        User         @relation(fields: [userId], references: [id])
-  comments    Comment[] // Les commentaires sur la ressource
   createdAt   DateTime     @default(now())
+  teacher     Teacher      @relation(fields: [teacherId], references: [id])
+  teacherId   String
 }
 
 model Comment {
-  id         String   @id @default(cuid())
-  content    String
-  resourceId String
-  userId     String
-  resource   Resource @relation(fields: [resourceId], references: [id])
-  user       User     @relation(fields: [userId], references: [id])
-  createdAt  DateTime @default(now())
+  id        String   @id @default(cuid())
+  content   String
+  userId    String
+  user      User     @relation(fields: [userId], references: [id])
+  createdAt DateTime @default(now())
+  course    Course   @relation(fields: [courseId], references: [id])
+  courseId  String
+}
+
+model Room {
+  id              String   @id @default(cuid())
+  name            String
+  capacity        Int      @default(100)
+  capacityReached Boolean  @default(false)
+  users           User[]
+  subject         Subject
+  createdAt       DateTime @default(now())
+  updatedAt       DateTime @updatedAt
+}
+
+model Message {
+  id        String   @id @default(cuid())
+  content   String
+  createdAt DateTime @default(now())
+  senderId  String
+  sender    User     @relation(fields: [senderId], references: [id])
 }
 
 enum Role {
   TEACHER
   STUDENT
+  ADMIN
 }
 
 // Community
@@ -73,4 +128,14 @@ enum ResourceType {
   VIDEO
   IMAGE
   DOCUMENT
+}
+
+enum Subject {
+  GENIE_LOGICIEL
+  RESEAUX
+  BASES_DE_DONNEES
+  SYSTEMES_D_INFORMATION
+  INTELLIGENCE_ARTIFICIELLE
+  ALGORITHMES_ET_STRUCTURE_DE_DONNEES
+  ENTREUPRENARIAT
 }

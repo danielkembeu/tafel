@@ -17,6 +17,8 @@ app.use('/api/users', userRoutes);
 app.use('/api/courses', courseRoutes);
 app.use('/api/resources', resourceRoutes);
 app.use('/api/comments', commentRoutes);
+app.use('/api/rooms', commentRoutes);
+app.use('/api/messages', commentRoutes);
 
 app.listen(port, () => {
     console.log(`Server is running at port ${port}`);
