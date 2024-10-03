@@ -11,6 +11,7 @@ import AppButton from '@/components/buttons/app_button';
 import { router } from 'expo-router';
 import { User } from '@/utils/interface/user';
 import axios from 'axios';
+import { filieres } from '@/utils/data/filiere';
 
 type RegisterFormFields = {
     fullname: string;
@@ -29,6 +30,7 @@ export default function RegisterScreen() {
         defaultValues: {
             fullname: '',
             role: 'STUDENT',
+            filiere: '',
             email: ''
         }
     });
@@ -67,8 +69,9 @@ export default function RegisterScreen() {
 
 
     return (
-        <ScrollView showsVerticalScrollIndicator={false}>
-            <SafeAreaView style={[styles.container]}>
+        <SafeAreaView style={[styles.container]}>
+            <ScrollView
+                showsVerticalScrollIndicator={false}>
 
                 <View style={{
                     width: '100%',
@@ -176,6 +179,34 @@ export default function RegisterScreen() {
                             </View>
                         )}
                     />
+
+
+                    <Controller
+                        control={form.control}
+                        name='filiere'
+                        render={({ field, fieldState: { error } }) => (
+                            <View style={{
+                                width: '100%',
+                                marginVertical: 6
+                            }}>
+                                <Text style={{ marginVertical: 8, fontSize: 18, fontWeight: 'bold' }}>Select a field</Text>
+                                <Picker
+                                    {...field}
+                                    selectedValue={field.value}
+                                    placeholder='Select the User role'
+                                    onValueChange={(itemValue) => field.onChange(itemValue)}
+                                    style={{
+                                        width: '100%'
+                                    }}
+                                >
+                                    {filieres.map((item, index) =>
+                                        <Picker.Item key={item.key} label={item.text} value={item.key} />
+                                    )}
+                                </Picker>
+                                <Text>{error?.message}</Text>
+                            </View>
+                        )}
+                    />
                 </View>
 
                 <View style={{
@@ -197,17 +228,16 @@ export default function RegisterScreen() {
                         outlined
                     />
 
-
                     <AppButton
                         disabled={pending}
-                        text='Visit'
-                        action={() => router.replace("/(tabs)/")}
-                        type='1'
-                        outlined
+                        text='Continue as visitor'
+                        action={() => router.push("/(tabs)/")}
+                        type='2'
                     />
+
                 </View>
-            </SafeAreaView>
-        </ScrollView>
+            </ScrollView >
+        </SafeAreaView>
     )
 }
 

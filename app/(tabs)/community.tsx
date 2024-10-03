@@ -4,7 +4,7 @@ import SectionHeader from '@/components/section_header'
 import AppButton from '@/components/buttons/app_button'
 import { Ionicons } from '@expo/vector-icons'
 import { Colors } from '@/constants/Colors'
-import { filiere } from '@/utils/data/filiere'
+import { filieres } from '@/utils/data/filiere'
 import CommunityPreviewTile from '@/components/community_tile'
 
 
@@ -36,7 +36,7 @@ export default function InboxScreen() {
           decelerationRate={.8}
           showsHorizontalScrollIndicator={false}
           contentContainerStyle={{ gap: 10, paddingHorizontal: 20 }}
-          data={filiere.filter(f => f.text.length < 19)}
+          data={filieres.filter(f => f.text.length < 19)}
           renderItem={({ item }) => (
             <InlineButton
               iiconName='globe'
@@ -53,7 +53,7 @@ export default function InboxScreen() {
         />
 
         <FlatList
-          data={filiere}
+          data={filieres}
           contentContainerStyle={{ paddingHorizontal: 20 }}
           renderItem={({ item }) => (
             <CommunityPreviewTile

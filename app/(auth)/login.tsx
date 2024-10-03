@@ -21,7 +21,8 @@ export default function RegisterScreen() {
     const form = useForm<z.infer<typeof LoginSchema>>({
         resolver: zodResolver(LoginSchema),
         defaultValues: {
-            email: ''
+            email: '',
+            password: ''
         }
     });
 
@@ -41,7 +42,7 @@ export default function RegisterScreen() {
             const userData = {
                 email
             }
-            
+
             console.log(userData);
         }
     }
@@ -92,6 +93,34 @@ export default function RegisterScreen() {
                                 onChangeText={(text) => field.onChange(text)}
                                 placeholder='Enter your Fullname'
                                 keyboardType="email-address"
+                                style={{
+                                    width: '100%',
+                                    borderRadius: 6,
+                                    borderWidth: 2,
+                                    borderColor: error ? 'red' : Colors.secondary,
+                                    height: 48,
+                                    paddingHorizontal: 20
+                                }}
+                            />
+                            <Text style={{ color: 'red' }}>{error?.message}</Text>
+                        </View>
+                    )}
+                />
+
+
+                <Controller
+                    control={form.control}
+                    name='password'
+                    render={({ field, fieldState: { error } }) => (
+                        <View style={{ gap: 2 }}>
+                            <Text style={{ marginVertical: 8, fontSize: 18, fontWeight: 'bold' }}>
+                                Password
+                            </Text>
+                            <TextInput
+                                {...field}
+                                value={field.value}
+                                onChangeText={(text) => field.onChange(text)}
+                                placeholder='Enter your password.'
                                 style={{
                                     width: '100%',
                                     borderRadius: 6,

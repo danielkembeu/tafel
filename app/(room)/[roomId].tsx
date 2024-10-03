@@ -9,7 +9,7 @@ import { View, Text, StyleSheet, FlatList, Animated, KeyboardAvoidingView, TextI
 type MessageItemProps = {
     message: Message;
     isCurrentUser: boolean;
-}
+};
 
 const MessageItem = ({ message, isCurrentUser }: MessageItemProps) => {
     const containerStyle = isCurrentUser
@@ -22,9 +22,9 @@ const MessageItem = ({ message, isCurrentUser }: MessageItemProps) => {
 
     return (
         <View style={[containerStyle, isCurrentUser ? styles.alignRight : styles.alignLeft]}>
-            <Text style={[styles.author, isCurrentUser && { color: 'white' }]}>{message.author} {message.online ? '🟢' : '🔴'}</Text>
+            {!isCurrentUser && <Text style={[styles.author, isCurrentUser && { color: 'white' }]}>{message.author} {message.online ? '🟢' : '🔴'}</Text>}
             <Text style={textStyle}>{message.content}</Text>
-            <Text style={styles.date}>{message.sent_date.toLocaleString()}</Text>
+            <Text style={[styles.date, isCurrentUser && { color: 'white' }]}>{message.sent_date.toLocaleString()}</Text>
         </View>
     );
 };

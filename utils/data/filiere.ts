@@ -1,4 +1,4 @@
-export const filiere = [
+export const filieres = [
     { key: "ACC", value: "ACC", text: "Action Commerciale" },
     { key: "BAN", value: "BAN", text: "Banque et Finance" },
     { key: "COM", value: "COM", text: "Communication des Entreprises" },
