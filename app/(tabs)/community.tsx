@@ -9,12 +9,13 @@ import CommunityPreviewTile from '@/components/community_tile'
 
 
 // A utility button Component that allows me to create multiple instances of a small inline button.
-export const InlineButton = ({ text, iiconName }: {
+export const InlineButton = ({ text, iiconName, action }: {
   iiconName: React.ComponentProps<typeof Ionicons>['name'],
-  text: string
+  text: string,
+  action: () => void;
 }) => {
   return (
-    <TouchableOpacity style={styles.rightButton}>
+    <TouchableOpacity style={styles.rightButton} onPress={action}>
       <Ionicons name={iiconName} size={20} color={Colors.primary} />
       <Text style={styles.rightButtonText}>{text}</Text>
     </TouchableOpacity>
@@ -41,6 +42,7 @@ export default function InboxScreen() {
             <InlineButton
               iiconName='globe'
               text={item.text}
+              action={() => { }}
             />
           )}
         />
@@ -49,7 +51,13 @@ export default function InboxScreen() {
       <View style={{ marginBottom: 40 }}>
         <SectionHeader
           sectionTitle='Communautés'
-          sectionHeaderRight={<InlineButton iiconName='add' text="Ajouter" />}
+          sectionHeaderRight={
+            <InlineButton
+              iiconName='add'
+              text="Ajouter"
+              action={() => { }}
+            />
+          }
         />
 
         <FlatList

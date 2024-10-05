@@ -1,55 +1,59 @@
-import { User } from "@/utils/interface/user";
-import axios from "axios";
-import { Alert, ToastAndroid } from "react-native";
+import { users } from "@/utils/data/users";
+import { User } from "@/utils/interface/global";
+import { ToastAndroid } from "react-native";
+import { throwError } from '@/utils/error_function';
 
 
-const BASE_USER_ENDPOINT = 'http://10.0.2.2:4100/users';
-const ERROR_MESSAGE = {
-    message: "Something went wrong ! Please try again later..."
-};
-
-export async function getAllUsers() {
-
-    await axios.get(BASE_USER_ENDPOINT)
-        .then((response) => {
-            if (response.data) {
-                return response.data;
-            }
-        })
-        .catch((error) => {
-            if (error) {
-                Alert.alert(`${JSON.stringify(ERROR_MESSAGE)}`)
-            }
-        });
-
+export function getAllUsers(): User[] {
+    return users;
 }
 
-export async function getOneUser(userId: string) {
-
-    const URL = `${BASE_USER_ENDPOINT}/${userId}`;
-
-    await axios.get(URL)
-        .then((response) => {
-            if (response.data) {
-                return response.data;
-            }
-        })
-        .catch((error) => {
-            if (error) {
-                Alert.alert(`${JSON.stringify(ERROR_MESSAGE)}`)
-            }
-        });
+export function getUserById(userId: string): User | undefined {
+    const match = users.find(user => user.id === userId);
+    if (match) {
+        return match;
+    } else {
+        throwError("User not found!", 'ERROR');
+    }
 }
 
 
-export async function createNewUser(userData: User): Promise<User> {
-    console.log({ userData });
-    const URL = `${BASE_USER_ENDPOINT}/create`;
+export function createNewUser(userData: User) {
+    const existingUser = users.find(user => user.email === userData.email);
 
-    return await axios.post(URL, userData)
-        .then(response => response.data)
-        .catch(error => {
-            ToastAndroid.show(error.message, ToastAndroid.LONG);
-            console.log(error);
-        });
+    if (userData && !existingUser) {
+        users.push(userData);
+        ToastAndroid.show("User created successfully !", ToastAndroid.LONG);
+        console.log('newUser:', userData);
+    } else if (existingUser) {
+        throwError("User already exists !", 'ERROR');
+    } else {
+        throwError("Wrong credentials ! Please try again !", 'ERROR');
+    }
 }
+
+
+export function updateUser(userId: string, data: Partial<User>): User | undefined {
+    const match = getUserById(userId);
+
+    if (match) {
+        Object.assign(match, data);
+        ToastAndroid.show("User updated successfully!", ToastAndroid.LONG);
+        return match;
+    } else {
+        throwError("User not found!", 'ERROR');
+    }
+}
+
+
+export function deleteUser(userId: string) {
+    const match = getUserById(userId);
+
+    if (match) {
+        users.splice(users.indexOf(match), 1);
+        ToastAndroid.show("User deleted successfully!", ToastAndroid.LONG);
+    } else {
+        throwError("User not found!", 'ALERT');
+    }
+}
+

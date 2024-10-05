@@ -6,10 +6,9 @@ import { Controller, useForm } from 'react-hook-form';
 import * as z from 'zod';
 import { LoginSchema } from '@/schemas';
 import { zodResolver } from '@hookform/resolvers/zod';
-import { Picker } from '@react-native-picker/picker';
 import AppButton from '@/components/buttons/app_button';
 import { router } from 'expo-router';
-import { createNewUser, getAllUsers } from '@/services/userServices';
+import { getAllUsers } from '@/services/userServices';
 import { User } from '@/utils/interface/user';
 
 type LoginFormFields = {
@@ -26,25 +25,30 @@ export default function RegisterScreen() {
         }
     });
 
-    const [loading, setLoading] = React.useState(false);
+    const [loading, transitionFn] = React.useTransition();
     const [user, setUser] = React.useState<User | null>(null);
 
 
     const login = async (data: LoginFormFields) => {
         console.log({ data });
-        setLoading(true);
         const validatedFields = LoginSchema.safeParse(data);
 
         const allUsers = await getAllUsers();
 
-        if (validatedFields.success) {
-            const { email } = data;
-            const userData = {
-                email
-            }
+        transitionFn(() => {
+            if (validatedFields.success) {
+                const { email } = data
 
-            console.log(userData);
-        }
+                const user = allUsers.find(u => u.email === email);
+
+                if (user) {
+                    setUser(user);
+                    router.replace('/(tabs)');
+                } else {
+                    Alert.alert('Error', 'Invalid email or password');
+                }
+            }
+        })
     }
 
     return (

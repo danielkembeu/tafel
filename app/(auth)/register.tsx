@@ -10,18 +10,16 @@ import { Picker } from '@react-native-picker/picker';
 import AppButton from '@/components/buttons/app_button';
 import { router } from 'expo-router';
 import { User } from '@/utils/interface/user';
-import axios from 'axios';
 import { filieres } from '@/utils/data/filiere';
+import { createNewUser } from '@/services/userServices';
+import { Role } from '@/utils/interface/global';
+import { throwError } from '@/utils/error_function';
 
 type RegisterFormFields = {
     fullname: string;
     email: string;
-    role: 'STUDENT' | 'TEACHER'
+    role: Role
 }
-
-const BASE_USER_ENDPOINT = 'http://10.0.2.2:4100/users';
-const URL = `${BASE_USER_ENDPOINT}/create`;
-
 
 export default function RegisterScreen() {
 
@@ -31,39 +29,40 @@ export default function RegisterScreen() {
             fullname: '',
             role: 'STUDENT',
             filiere: '',
-            email: ''
+            email: '',
+            password: ''
         }
     });
 
     const [pending, transitionFn] = React.useTransition();
-    const [user, setUser] = React.useState<User | null>(null);
 
 
-    const register = async (data: RegisterFormFields) => {
+    const register = async (data: any) => {
         console.log({ formData: data });
-
         const validatedFields = RegisterSchema.safeParse(data);
 
-        if (validatedFields.success) {
-            const { fullname, email, role } = data;
+        transitionFn(() => {
+            if (validatedFields.success) {
+                const { fullname, email, role } = data;
 
-            const userData = {
-                email,
-                role,
-                name: fullname
+                const userData = {
+                    id: `user_${role}_${Math.random() * 1000}`,
+                    email,
+                    role: role as Role,
+                    name: fullname,
+                    password: ''
+                };
+
+                try {
+                    createNewUser(userData);
+                    router.push("/(auth)/login");
+
+                } catch (error: any) {
+                    ToastAndroid.show(error.message, ToastAndroid.LONG);
+                    console.log(error);
+                }
             };
-
-            try {
-                const response = await axios.get(BASE_USER_ENDPOINT);
-                console.log({
-                    data: response.data,
-                    code: response.status
-                });
-            } catch (error: any) {
-                ToastAndroid.show(error.message, ToastAndroid.LONG);
-                console.log(error);
-            }
-        };
+        });
 
     }
 
@@ -108,12 +107,12 @@ export default function RegisterScreen() {
                         name='fullname'
                         render={({ field, fieldState: { error } }) => (
                             <View style={{ gap: 2 }}>
-                                <Text style={{ marginVertical: 8, fontSize: 18, fontWeight: 'bold' }}>Fullname</Text>
+                                <Text style={{ marginVertical: 8, fontSize: 18, fontWeight: 'bold' }}>Nom complet</Text>
                                 <TextInput
                                     {...field}
                                     value={field.value}
                                     onChangeText={(text) => field.onChange(text)}
-                                    placeholder='Enter your Fullname'
+                                    placeholder='John Doe'
                                     style={{
                                         width: '100%',
                                         borderRadius: 6,
@@ -133,13 +132,39 @@ export default function RegisterScreen() {
                         name='email'
                         render={({ field, fieldState: { error } }) => (
                             <View style={{ gap: 2 }}>
-                                <Text style={{ marginVertical: 8, fontSize: 18, fontWeight: 'bold' }}>Email Address</Text>
+                                <Text style={{ marginVertical: 8, fontSize: 18, fontWeight: 'bold' }}>Adresse mail</Text>
                                 <TextInput
                                     {...field}
                                     value={field.value}
                                     onChangeText={(text) => field.onChange(text)}
-                                    placeholder='Enter your Fullname'
+                                    placeholder='test@example.com'
                                     keyboardType="email-address"
+                                    style={{
+                                        width: '100%',
+                                        borderRadius: 6,
+                                        borderWidth: 2,
+                                        borderColor: error ? 'red' : Colors.secondary,
+                                        height: 48,
+                                        paddingHorizontal: 20
+                                    }}
+                                />
+                                <Text style={{ color: 'red' }}>{error?.message}</Text>
+                            </View>
+                        )}
+                    />
+
+                    <Controller
+                        control={form.control}
+                        name='password'
+                        render={({ field, fieldState: { error } }) => (
+                            <View style={{ gap: 2 }}>
+                                <Text style={{ marginVertical: 8, fontSize: 18, fontWeight: 'bold' }}>Mot de passe</Text>
+                                <TextInput
+                                    {...field}
+                                    value={field.value}
+                                    onChangeText={(text) => field.onChange(text)}
+                                    placeholder="example@1049"
+                                    secureTextEntry
                                     style={{
                                         width: '100%',
                                         borderRadius: 6,
@@ -158,25 +183,30 @@ export default function RegisterScreen() {
                         control={form.control}
                         name='role'
                         render={({ field, fieldState: { error } }) => (
-                            <View style={{
-                                width: '100%',
-                                marginVertical: 6
-                            }}>
-                                <Text style={{ marginVertical: 8, fontSize: 18, fontWeight: 'bold' }}>Select a Role</Text>
-                                <Picker
-                                    {...field}
-                                    selectedValue={field.value}
-                                    placeholder='Select the User role'
-                                    onValueChange={(itemValue) => field.onChange(itemValue)}
-                                    style={{
-                                        width: '100%'
-                                    }}
-                                >
-                                    <Picker.Item label="Student" value="STUDENT" />
-                                    <Picker.Item label="Teacher" value="TEACHER" />
-                                </Picker>
-                                <Text>{error?.message}</Text>
-                            </View>
+                            <>
+                                <Text style={{ marginVertical: 8, fontSize: 18, fontWeight: 'bold' }}>Choisir un role</Text>
+                                <View style={{
+                                    width: '100%',
+                                    marginVertical: 6,
+                                    backgroundColor: '#eee',
+                                    borderRadius: 10
+                                }}>
+                                    <Picker
+                                        {...field}
+                                        selectedValue={field.value}
+                                        placeholder='Choisir un role'
+                                        onValueChange={(itemValue) => field.onChange(itemValue)}
+                                        style={{
+                                            width: '100%'
+                                        }}
+                                    >
+                                        <Picker.Item label="Student" value='STUDENT' />
+                                        <Picker.Item label="Teacher" value='TEACHER' />
+                                        <Picker.Item label="Admin" value='ADMIN' />
+                                    </Picker>
+                                </View>
+                                <Text style={{ color: 'red' }}>{error?.message}</Text>
+                            </>
                         )}
                     />
 
@@ -185,26 +215,30 @@ export default function RegisterScreen() {
                         control={form.control}
                         name='filiere'
                         render={({ field, fieldState: { error } }) => (
-                            <View style={{
-                                width: '100%',
-                                marginVertical: 6
-                            }}>
-                                <Text style={{ marginVertical: 8, fontSize: 18, fontWeight: 'bold' }}>Select a field</Text>
-                                <Picker
-                                    {...field}
-                                    selectedValue={field.value}
-                                    placeholder='Select the User role'
-                                    onValueChange={(itemValue) => field.onChange(itemValue)}
-                                    style={{
-                                        width: '100%'
-                                    }}
-                                >
-                                    {filieres.map((item, index) =>
-                                        <Picker.Item key={item.key} label={item.text} value={item.key} />
-                                    )}
-                                </Picker>
-                                <Text>{error?.message}</Text>
-                            </View>
+                            <>
+                                <Text style={{ marginVertical: 8, fontSize: 18, fontWeight: 'bold' }}>Choisir une filière</Text>
+                                <View style={{
+                                    width: '100%',
+                                    marginVertical: 6,
+                                    backgroundColor: '#eee',
+                                    borderRadius: 10
+                                }}>
+                                    <Picker
+                                        {...field}
+                                        selectedValue={field.value}
+                                        placeholder='Choisir une filière'
+                                        onValueChange={(itemValue) => field.onChange(itemValue)}
+                                        style={{
+                                            width: '100%'
+                                        }}
+                                    >
+                                        {filieres.map((item, index) =>
+                                            <Picker.Item key={item.key} label={item.text} value={item.key} />
+                                        )}
+                                    </Picker>
+                                </View>
+                                <Text style={{ color: 'red' }}>{error?.message}</Text>
+                            </>
                         )}
                     />
                 </View>

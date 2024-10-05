@@ -55,9 +55,9 @@ export default function TabsLayout() {
                 }}
             />
 
-            <Tabs.Screen name="resources"
+            <Tabs.Screen name="courses"
                 options={{
-                    title: 'Resources',
+                    title: 'Courses',
                     tabBarIcon: ({ color }) =>
                         <Ionicons name="file-tray-full" size={24} color={color} />
                 }}

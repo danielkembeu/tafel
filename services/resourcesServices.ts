@@ -1,34 +1,60 @@
-import { Resource } from "@/utils/interface/resource";
-import axios from "axios";
+import { resources } from "@/utils/data/resources";
+import { throwError } from "@/utils/error_function";
+import { Resource } from "@/utils/interface/global";
+import { Subject } from "@/utils/interface/global";
+import { ToastAndroid } from "react-native";
+import { getCourseById } from "./coursesServices";
 
 
-const BASE_RESOURCES_ENDPOINT = 'http://localhost:4100/users';
-const ERROR_MESSAGE = {
-    message: "Something went wrong ! Please try again later..."
-};
 
-export async function getAllResources(): Promise<Resource> {
-    const response = await axios.get(BASE_RESOURCES_ENDPOINT);
-    const data = await response.data;
+export function getAllResources() {
+    return resources;
+}
 
-    if (data) {
-        return Promise.resolve(data);
+
+export function getResourcesByCourse(courseId: string): Resource[] {
+    const courseResources = resources.filter(resource => resource.courseId === courseId);
+
+    if (courseResources.length) {
+        return courseResources;
     } else {
-        return Promise.reject(ERROR_MESSAGE);
+        throwError("No resources found for this course!", "ALERT");
+        return [];
     }
 }
 
 
-export async function createNewUser(resourceData: Resource): Promise<Resource> {
+export function getResourceById(id: string, courseId: string): Resource | undefined {
+    const resources: Resource[] = getResourcesByCourse(courseId); // Remplacer par le cours désiré
+    const resource = resources.find(resource => resource.id === id);
 
-    const URL = `${BASE_RESOURCES_ENDPOINT}/create`;
-
-    const response = await axios.post(URL, resourceData);
-    const data = await response.data;
-
-    if (data) {
-        return Promise.resolve(data);
+    if (resource) {
+        return resource;
     } else {
-        return Promise.reject(ERROR_MESSAGE);
+        throwError("Resource not found !", 'ERROR');
     }
+}
+
+
+export function addResource(courseId: string, resource: Resource) {
+
+    const courses = getCourseById(courseId);
+
+    if (resource) {
+        resources.push({ ...resource, courseId: courseId });
+        ToastAndroid.show("Course created successfully !", ToastAndroid.LONG);
+    } else {
+        throwError("Error occured ! Please try again !", 'ERROR');
+    }
+}
+
+
+export function deleteResource(resourceId: string) {
+    const resource = getAllResources().find(r => r.id === resourceId);
+
+    if (resource) {
+        ToastAndroid.show("Resource deleted !", ToastAndroid.LONG);
+    }
+
+    throwError("Resource not found !", "ERROR");
 }

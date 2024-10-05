@@ -1,8 +1,12 @@
+import { Role, Subject } from "./global";
+
 export interface User {
     id?: string;
     name: string;
     email: string;
-    role: "STUDENT" | "TEACHER";
+    role: Role;
+    age?: number;
+    subject?: Subject;
     createdAt?: Date;
     updatedAt?: Date;
 }
